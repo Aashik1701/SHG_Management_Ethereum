@@ -7,7 +7,6 @@ import ProposalCard from './components/proposals/ProposalCard';
 import TransactionList from './components/transactions/TransactionList';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
-import styles from './Home.module.css';
 
 const providerOptions = {
   // Add your provider options here if needed
@@ -147,7 +146,7 @@ const App: React.FC = () => {
 
       <div className="relative">
         <button
-          className={`fixed top-4 right-20 z-50 px-4 py-2 rounded-lg 
+          className={`fixed top-3 right-20 z-50 px-4 py-1.5 rounded-lg 
         ${account 
           ? 'bg-green-500 hover:bg-green-600' 
           : 'bg-blue-500 hover:bg-blue-600'
