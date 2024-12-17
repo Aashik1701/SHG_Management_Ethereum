@@ -10,7 +10,14 @@ import Web3Modal from 'web3modal';
 import styles from './Home.module.css';
 
 const providerOptions = {
-  // Add your provider options here if needed
+  // Example provider options
+  metamask: {
+    display: {
+      name: 'MetaMask',
+      description: 'Connect to your MetaMask wallet',
+    },
+    package: true, // metaMask doesn't require a package, just use 'true'
+  },
 };
 
 const web3modal = new Web3Modal({
@@ -82,8 +89,10 @@ const mockTransactions = [
 
 const App: React.FC = () => {
   const [account, setAccount] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const connectWallet = async () => {
+    setLoading(true);
     try {
       const provider = await web3modal.connect();
       const web3 = new Web3(provider);
@@ -91,6 +100,8 @@ const App: React.FC = () => {
       setAccount(accounts[0]);
     } catch (error) {
       console.error('Error connecting to MetaMask:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,33 +147,37 @@ const App: React.FC = () => {
       </div>
 
       <div className="relative">
-        <button
-          className={styles.connectButton}
-          onClick={connectWallet}
-          style={{
-            position: 'absolute',
-            top: '0px',
-            right: '20px',
-            zIndex: 1000,
-          }}
-        >
-          {account ? 'Wallet Connected' : 'Connect Wallet'}
-        </button>
+  <div
+    style={{
+      position: 'absolute',
+      top: '0px',
+      right: '20px',
+      zIndex: 1000,
+      display: 'flex',
+      flexDirection: 'column', // Stack items vertically
+      alignItems: 'flex-end',   // Align to the right
+    }}
+  >
+    <button
+      className={styles.connectButton}
+      onClick={connectWallet}
+      disabled={loading}
+    >
+      {loading ? 'Connecting...' : account ? 'Wallet Connected' : 'Connect Wallet'}
+    </button>
 
-        <div
-          style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            zIndex: 1000,
-            fontSize: '14px',
-            color: account ? 'green' : 'red',
-          }}
-        >
-          {account ? `Connected: ${account}` : 'Wallet not connected'}
-        </div>
-      </div>
+    <div
+      style={{
+        fontSize: '14px',
+        color: account ? 'green' : 'red',
+        marginTop: '8px', // Add some space between the button and the message
+      }}
+    >
+      {account ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}` : 'Wallet not connected'}
     </div>
+  </div>
+</div>
+</div>
   );
 };
 
