@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import SHGCard from './components/shg/SHGCard';
@@ -82,6 +82,11 @@ const mockTransactions = [
 
 const App: React.FC = () => {
   const [account, setAccount] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode);
+  }, [isDarkMode]);
 
   const connectWallet = async () => {
     try {
@@ -94,8 +99,13 @@ const App: React.FC = () => {
     }
   };
 
+  const disconnectWallet = () => {
+    web3modal.clearCachedProvider();
+    setAccount(null);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-black'}`}>
       <Sidebar />
       
       <div className="flex-1">
@@ -104,7 +114,7 @@ const App: React.FC = () => {
         <main className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 gap-8">
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Active SHG</h2>
+              <h2 className="text-2xl font-bold mb-4">Active SHG</h2>
               <SHGCard 
                 shg={mockSHG} 
                 onClick={() => console.log('SHG clicked')} 
@@ -112,7 +122,7 @@ const App: React.FC = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Members</h2>
+              <h2 className="text-2xl font-bold mb-4">Members</h2>
               <MemberList 
                 members={mockMembers}
                 onRemoveMember={(id) => console.log('Remove member:', id)}
@@ -120,7 +130,7 @@ const App: React.FC = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Active Proposals</h2>
+              <h2 className="text-2xl font-bold mb-4">Active Proposals</h2>
               <ProposalCard 
                 proposal={mockProposal}
                 onVote={(vote) => console.log('Vote:', vote)}
@@ -128,7 +138,7 @@ const App: React.FC = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Recent Transactions</h2>
+              <h2 className="text-2xl font-bold mb-4">Recent Transactions</h2>
               <TransactionList transactions={mockTransactions} />
             </section>
           </div>
@@ -149,6 +159,21 @@ const App: React.FC = () => {
           {account ? 'Wallet Connected' : 'Connect Wallet'}
         </button>
 
+        {account && (
+          <button
+            className={styles.clearButton}
+            onClick={disconnectWallet}
+            style={{
+              position: 'absolute',
+              top: '50px',
+              right: '20px',
+              zIndex: 1000,
+            }}
+          >
+            Disconnect Wallet
+          </button>
+        )}
+
         <div
           style={{
             position: 'absolute',
@@ -159,8 +184,10 @@ const App: React.FC = () => {
             color: account ? 'green' : 'red',
           }}
         >
-          {account ? `Connected: ${account}` : 'Wallet not connected'}
+          {account ? `C: ${account}` : 'Wallet not connected'}
         </div>
+
+        
       </div>
     </div>
   );

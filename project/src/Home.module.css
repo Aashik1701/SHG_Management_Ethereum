@@ -159,6 +159,29 @@
       align-items: center;
       justify-content: center;
     }
+    .wallet-connect {
+        appearance: none;
+        border-radius: 128px;
+        height: 48px;
+        padding: 0 20px;
+        border: 2px solid var(--button-primary-hover);
+        background: transparent;
+        color: var(--button-primary-hover);
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        line-height: 20px;
+        font-weight: 500;
+    }
+    
+    .wallet-connect:hover {
+        background: var(--button-primary-hover);
+        color: var(--background);
+        border-color: transparent;
+    }    
   }
   
   @media (prefers-color-scheme: dark) {
