@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import SHGCard from './components/shg/SHGCard';
 import MemberList from './components/members/MemberList';
 import ProposalCard from './components/proposals/ProposalCard';
 import TransactionList from './components/transactions/TransactionList';
-import { useWallet } from './hooks/useWallet';
+import Web3 from 'web3';
+import Web3Modal from 'web3modal';
+import styles from './Home.module.css';
+
+const providerOptions = {
+  // Add your provider options here if needed
+};
+
+const web3modal = new Web3Modal({
+  network: 'mainnet',
+  cacheProvider: true,
+  providerOptions,
+});
 
 // Mock data
 const mockSHG = {
@@ -68,8 +80,19 @@ const mockTransactions = [
   }
 ];
 
-function App() {
-  const { account, connectWallet } = useWallet();
+const App: React.FC = () => {
+  const [account, setAccount] = useState<string | null>(null);
+
+  const connectWallet = async () => {
+    try {
+      const provider = await web3modal.connect();
+      const web3 = new Web3(provider);
+      const accounts = await web3.eth.getAccounts();
+      setAccount(accounts[0]);
+    } catch (error) {
+      console.error('Error connecting to MetaMask:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -111,8 +134,36 @@ function App() {
           </div>
         </main>
       </div>
+
+      <div className="relative">
+        <button
+          className={styles.connectButton}
+          onClick={connectWallet}
+          style={{
+            position: 'absolute',
+            top: '0px',
+            right: '20px',
+            zIndex: 1000,
+          }}
+        >
+          {account ? 'Wallet Connected' : 'Connect Wallet'}
+        </button>
+
+        <div
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            zIndex: 1000,
+            fontSize: '14px',
+            color: account ? 'green' : 'red',
+          }}
+        >
+          {account ? `Connected: ${account}` : 'Wallet not connected'}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
