@@ -147,47 +147,46 @@ const App: React.FC = () => {
 
       <div className="relative">
         <button
-          className={styles.connectButton}
+          className={`fixed top-4 right-20 z-50 px-4 py-2 rounded-lg 
+        ${account 
+          ? 'bg-green-500 hover:bg-green-600' 
+          : 'bg-blue-500 hover:bg-blue-600'
+        } text-white transition-colors duration-200`}
           onClick={connectWallet}
-          style={{
-            position: 'absolute',
-            top: '0px',
-            right: '20px',
-            zIndex: 1000,
-          }}
         >
           {account ? 'Wallet Connected' : 'Connect Wallet'}
         </button>
 
         {account && (
           <button
-            className={styles.clearButton}
-            onClick={disconnectWallet}
-            style={{
-              position: 'absolute',
-              top: '50px',
-              right: '20px',
-              zIndex: 1000,
-            }}
+        className="fixed top-3 right-5 z-4 px-4 py-2 rounded-lg 
+          bg-red-500 hover:bg-red-600 text-white 
+          transition-colors duration-200 flex items-center gap-2"
+        onClick={disconnectWallet}
           >
-            Disconnect Wallet
+
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-5 w-5" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        >
+          <path d="m2 2 20 20"/>
+          <path d="M5 5a1 1 0 0 0-1 1v7c0 5 3.5 7.5 7.67 8.94a1 1 0 0 0 .67.01c2.35-.82 4.48-1.97 5.9-3.71"/>
+          <path d="M9.309 3.652A12.252 12.252 0 0 0 11.24 2.28a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1v7a9.784 9.784 0 0 1-.08 1.264"/>
+        </svg>
           </button>
         )}
 
-        <div
-          style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            zIndex: 1000,
-            fontSize: '14px',
-            color: account ? 'green' : 'red',
-          }}
+        <div className={`fixed top-4 right-20 z-40 text-sm
+          ${account ? 'text-green-500' : 'text-red-500'}`}
         >
-          {account ? `C: ${account}` : 'Wallet not connected'}
+          {account ? `Connected: ${account.slice(0,6)}...${account.slice(-4)}` : 'Wallet not connected'}
         </div>
-
-        
       </div>
     </div>
   );
